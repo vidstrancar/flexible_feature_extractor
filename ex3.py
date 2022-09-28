@@ -9,10 +9,12 @@ consumption = pd.read_csv('data/consumption.csv',
 temperature = pd.read_csv('data/temperature.csv',
                           parse_dates=True, index_col=0).squeeze()
 
-data['consumption'] = consumption
-data['temperature'] = temperature
+data['consumption'] = consumption.resample('D').sum()
+data['temperature'] = temperature.resample('D').sum()
 
 extractor = Extractor(data)
 
-extractor._extract(['c_ht_var'])
-print(extractor.extracted)
+extractor._extract_available()
+
+print(f'Available: {extractor.extracted}')
+print(f'Unavailable: {extractor.unavailable}')

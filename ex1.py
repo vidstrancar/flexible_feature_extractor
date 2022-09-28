@@ -14,5 +14,8 @@ data['temperature'] = temperature
 
 extractor = Extractor(data)
 
-extractor._extract(['c_ht_var'])
-print(extractor.extracted)
+extractor._extract(['asc', 'skewness', 'kurtosis',
+                    'MinMax', 'nonExistantFeature', 'k'])
+
+print(f'Available: {extractor.extracted}')
+print(f'Unavailable: {extractor.unavailable}')
