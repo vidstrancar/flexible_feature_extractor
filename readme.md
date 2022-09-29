@@ -26,14 +26,22 @@ Dodali bomo značilko 'c_ht_var' - varianco porabe v visokotarifnih obdobjih. Po
 	@_import_features(['c_ht'])
 	@_check_if_exists_and_save_feature
 	def  c_ht_var(self):
-			""" variance of consumption during hts. """
-			return ((consumption[hts] - c_ht)**2).sum()/len(consumption[hts])
+		""" variance of consumption during hts. """
+		return ((consumption[hts] - c_ht)**2).sum()/len(consumption[hts])
 
 
-1. @_min_granularity(60) pove razredu, da je ta značilka na voljo, samo v primeru dovolj granuliranih podatkov
-2. @\_needs_data('hts') iz slovarja extractor.\_data uvozimo ze prej izracunane podatke o tem kdaj so visokotarifna obdobja. V definiciji funkcije je nato 'hts' na voljo kot lokalna spremenljivka (hts je seznam true/false vrednosti enake dolzine kot podatki o porabi. Za vsak vnos v podatkih o porabi pove ali je v obdobju viskoih tarif ali ne)
-3. @_needs_features('c_ht') # pove ekstraktorju naj najprej izracuna 'c_ht' in jo uvozi kot lokalno spremenljivko
+1. @_min_granularity(60) pove razredu, da je ta značilka na voljo, samo v primeru podatkov z granulacijo najmanj 60ih minut. 
+2. @\_needs_data('hts') .razdredu sporocimo, da bomo potrebovali podatke o visokotarifnih obdobjih. Dekorator nato klice metodo '.hts' in generira ter shrani v  slovarja extractor.\_data podatke o tem kdaj so visokotarifna obdobja (hts je seznam true/false vrednosti enake dolzine kot podatki o porabi. Za vsak vnos v podatkih o porabi pove ali je v obdobju viskoih tarif ali ne). V funkcijo se uvozi 'hts'  kot lokalno spremenljivko -- enako kot, da bi v funkciji na roke napisali 'hts = self._data['hts']'. 
+3. @_needs_features('c_ht') # pove ekstraktorju naj najprej izracuna 'c_ht'  z uporabo isto imenske metode . Ta metoda vrednost shrani kot 'self.features['c_ht']'  in jo uvozi kot lokalno spremenljivko (c_ht = self.features[''c_ht]) v funkciji.
 4. @_check_if_exists_and_save #v extractor.extracted preveri, ce smo ze prej izracunali znacilko 'c_ht_var', da ne bomo po nepotrebnem racunali se enkrat. V nasprotnem primeru, po izvedeni funkciji, vrnjeno vrednost shrani v slovar extractor.extracted s kljucem 'c_ht_var'  (za kljuc vzame ime spodaj definirane funkcije)
+
+
+## Hockey-stick značilke:
+- uporabljal na dnevnih podatkih o temperaturi in porabi
+- k1, n1, k2, n2 določjo obe premici best fit hockeyStick krivulje na grafu odvisnosti porabe od temperature.
+- lowpoint je temperatura, kjer hockeyStick krivulja doseže minimum oz. temperatura kjer se začne/konča hlajenje/gretje pri temperaturno odvisnih porabnikih.
+- linearErrRel, hockeyStickErrRel relativna napaka linearnega in hockeyStick modela na grafu porabe v odvisnosti od temperature. Manjša napako pomeni boljše prileganje modelu.
+- hockeyStickDependency je primerjava absolutne napake best fit premice in best fit hockeyStick krivulje. Bližje 1 so temperaturno odvisni uporabniki, bližje 0 so uporabniki, ki za gretje/hlajenje uporabljajo neelektrične metode (les, plin...)
 
 
 
