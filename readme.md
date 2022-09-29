@@ -21,17 +21,17 @@ Tabela se začne na strani 465.
 ## Primer dodajanje nove značilke v featureExtractor:
 Dodali bomo značilko 'c_ht_var' - varianco porabe v visokotarifnih obdobjih. Potrebovali bomo podatke o tem kdaj so visokotarifna obdobja in značilko 'c_ht', ki je povprečna poraba v visokotarifnih obdobjih. Poleg tega bomo potrebovali granulacijo podatkov vsaj 60 minut (ht obdobja so definirana prek ure natančno). Na konec razreda featureExtractor dodamo (brez številk vrstic):
 
-	 @_min_granularity(60)
+	@_min_granularity(60)
 	@_import_data(['hts', 'consumption'])
 	@_import_features(['c_ht'])
-	 @_check_if_exists_and_save_feature
-	 def  c_ht_var(self):
+	@_check_if_exists_and_save_feature
+	def  c_ht_var(self):
 			""" variance of consumption during hts. """
 			return ((consumption[hts] - c_ht)**2).sum()/len(consumption[hts])
 
 
-1. @_min_granularity(60) # pove razredu, da je ta značilka na voljo, samo v primeru dovolj granuliranih podatkov
-2. @\_needs_data('hts') # iz slovarja extractor.\_data uvozimo ze prej izracunane podatke o tem kdaj so visokotarifna obdobja. V definiciji funkcije je nato 'hts' na voljo kot lokalna spremenljivka (hts je seznam true/false vrednosti enake dolzine kot podatki o porabi. Za vsak vnos v podatkih o porabi pove ali je v obdobju viskoih tarif ali ne)
+1. @_min_granularity(60) pove razredu, da je ta značilka na voljo, samo v primeru dovolj granuliranih podatkov
+2. @\_needs_data('hts') iz slovarja extractor.\_data uvozimo ze prej izracunane podatke o tem kdaj so visokotarifna obdobja. V definiciji funkcije je nato 'hts' na voljo kot lokalna spremenljivka (hts je seznam true/false vrednosti enake dolzine kot podatki o porabi. Za vsak vnos v podatkih o porabi pove ali je v obdobju viskoih tarif ali ne)
 3. @_needs_features('c_ht') # pove ekstraktorju naj najprej izracuna 'c_ht' in jo uvozi kot lokalno spremenljivko
 4. @_check_if_exists_and_save #v extractor.extracted preveri, ce smo ze prej izracunali znacilko 'c_ht_var', da ne bomo po nepotrebnem racunali se enkrat. V nasprotnem primeru, po izvedeni funkciji, vrnjeno vrednost shrani v slovar extractor.extracted s kljucem 'c_ht_var'  (za kljuc vzame ime spodaj definirane funkcije)
 
