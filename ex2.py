@@ -14,5 +14,13 @@ data['temperature'] = temperature
 
 extractor = Extractor(data)
 
-extractor._extract(['c_ht_var'])
-print(extractor.extracted)
+extractor._extract_available()
+
+# ekstrahirane znacilke se shranijo v slovar extractor.extracted
+for k in extractor.extracted:
+    print(f'{k}: {extractor.extracted[k]}')
+
+# imena neuspesno ekstrahiranih znacilk in razlogi za neuspeh se shranijo v
+# slovar extractor._unavailable
+for f in extractor.unavailable:
+    print(f)
